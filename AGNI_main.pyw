@@ -2,6 +2,8 @@ from tkinter import *
 import tkinter
 from typing import Any
 from db.actual_refresh_otbor import ActualRefreshOtbor
+from doc.act_peredachi import ActPeredachi
+from doc.activaciya import Activqaciya
 from modules import *
 import os
 import sys
@@ -24,6 +26,7 @@ from some.natasha import *
 from some.activ_term import *
 from db.add_otbor_hard import *
 from db.add_otbor import *
+from db.add_otbor_hard_dep import *
 from db.refresh_all import *
 from monitor.walker import *
 from monitor.monitor import *
@@ -191,6 +194,18 @@ def otbor_text():
     clear_me()    
     text_box.insert(1.0, text)
     
+def otbor_text_list():
+    mytext = str(text_box.get(1.0, END)).strip()
+    text = ''
+    
+    try:
+        u = OtborHardDep(mytext)
+        u.main_otbor_hard_dep()
+        text += u.info + '\n'
+    except Exception as ex:
+        text += str(ex) + '\n'
+    clear_me()    
+    text_box.insert(1.0, text)
 
     
 def otbor_otbor():
@@ -435,26 +450,61 @@ def actual_analis():
     text_box.insert(1.0, text)
 
 
+def doc_activaciya():
+    text = ''
+    clear_me()
+    try:
+        u = Activqaciya()
+        u.main_activaciya()
+        text += u.info + '\n'
+    except Exception as ex:
+        text += str(ex) + '\n'
+    text_box.insert(1.0, text)
+
+def doc_act_peredachi():
+    text = ''
+    clear_me()
+    try:
+        u = ActPeredachi()
+        u.main_act_peredachi()
+        text += u.info + '\n'
+    except Exception as ex:
+        text += str(ex) + '\n'
+    text_box.insert(1.0, text)
+
+
+
+
+def clear_lb_term():
+    #terms = get_terminals_list()
+    box_terminals.delete(0, END)
+
+def clear_lb_partners():
+    box_partners.delete(0, END)
+
+def clear_lb_folders():
+    box_folders.delete(0, END)
 
 def mk_partners():
+    clear_lb_partners()
     partners = get_partners()
     for partner in partners:
         box_partners.insert(END, partner)
 
 
 def mk_terminals():
+    clear_lb_term()
     terminals = get_terminals_list()
     for terminal in terminals:
         box_terminals.insert(END, terminal)
 
 def mk_folders():
+    clear_lb_folders()
     items = comon_data_list(3)
     for item in items:
         box_folders.insert(END, item)
  
-def clear_lb_term():
-    terms = get_terminals_list()
-    box_terminals.delete(0, END)
+
 
 def refresh_lb_term():
     global terminals
@@ -514,7 +564,8 @@ some_memu.add_command(label="Активные кассы", command=some_activ_te
 
 otbor_memu = Menu(mainmenu, tearoff=0)
 otbor_memu.add_command(label="Выбор", command=otbor_otbor, font=(font_style, font_size))
-otbor_memu.add_command(label="Ввод", command=otbor_text, font=(font_style, font_size))
+otbor_memu.add_command(label="Отделения от до", command=otbor_text, font=(font_style, font_size))
+otbor_memu.add_command(label="Список отделений", command=otbor_text_list, font=(font_style, font_size))
 
 
 refresh_memu = Menu(mainmenu, tearoff=0)
@@ -554,18 +605,24 @@ actual_memu.add_command(label="удали отбор", command=actual_del_otbor,
 actual_memu.add_command(label="удали всё", command=actual_del_all, font=(font_style, font_size))
 actual_memu.add_command(label="анализ", command=actual_analis, font=(font_style, font_size))
 
+doc_memu = Menu(mainmenu, tearoff=0)
+doc_memu.add_command(label="Активация", command=doc_activaciya, font=(font_style, font_size))
+doc_memu.add_command(label="Акт передачи", command=doc_act_peredachi, font=(font_style, font_size))
+
+
+
+
 refresh_memu = Menu(mainmenu, tearoff=0)
 refresh_memu.add_command(label="обнови", command=refresh_me, font=(font_style, font_size))
+
+
+
 
 
 mainmenu.add_cascade(label="Люди",
                      menu=people_memu)
 mainmenu.add_cascade(label="Всячина",
                      menu=some_memu)
-mainmenu.add_cascade(label="Отбор",
-                     menu=otbor_memu)
-mainmenu.add_cascade(label="Обновление",
-                     menu=refresh_memu)
 mainmenu.add_cascade(label="Монитор",
                      menu=monitor_memu)
 mainmenu.add_cascade(label="Кабинет",
@@ -576,6 +633,10 @@ mainmenu.add_cascade(label="Очистка",
                      menu=clear_memu)
 mainmenu.add_cascade(label="Актуаль",
                      menu=actual_memu)
+mainmenu.add_cascade(label="Доки",
+                     menu=doc_memu)
+mainmenu.add_cascade(label="Отбор",
+                     menu=otbor_memu)                
 mainmenu.add_cascade(label="Обнови",
                      menu=refresh_memu)
 #mainmenu.add_command(label="Очистка", font=("Verdana", 30))
@@ -601,7 +662,7 @@ Button(text="", background = 'cyan').grid(row=3, column=0)
 Button(text="", background = 'cyan').grid(row=3, column=11)
 
 
-text_box = Text(font=(font_style, font_size), width=40, foreground='darkblue', background='cyan')
+text_box = Text(font=(font_style, font_size), width=50, foreground='darkblue', background='cyan')
 #text_box.grid(row=1, column=10)
 text_box.grid(row=1, column=10, sticky=E+W)
 

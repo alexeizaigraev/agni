@@ -556,7 +556,7 @@ def act_refresh_one_dep(dep):
     dep = str(dep)
     vec = []
     try:
-        vec = get_one_dep_data(dep)
+        vec = get_one_dep_data(dep)[0]
     except Exception as ex:
         pass
     try:

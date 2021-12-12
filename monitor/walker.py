@@ -5,6 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.par
 from modules import *
 import os
 import shutil
+from papa_pg import insert_all_otbor
 
 class Walker():
 
@@ -54,16 +55,27 @@ class Walker():
             try:
                 shutil.move(old_fname, new_fname)
                 self.info += new_fname + '\n'
+                if '_RP_' in fname:
+                    dep = fname.split('_RP_')[0]
+                    term = dep + '1'
+                    self.out += f'{term};{dep}\n'
             except:
                 self.info += f'>> {new_fname}\n'
             
             
     def walker_main(self):
+        head = 'term;dep\n'
+        self.out = head
+        
         self.info = ''        
         self.mover()
 
         self.info += '\n\n\nОстаток в rasklad:\n'
         self.show()
+
+        text_to_file(self.out, IN_DATA_PATH + 'otbor.csv')
+        insert_all_otbor()
+        self.info += (f'\n{self.out}\n')
 
 
 #u = Walker()

@@ -33,7 +33,12 @@ class RefreshAll():
         info += insert_all_terms() + '\n'
         info += insert_all_otbor() + '\n\n'
 
+        """
         fnames = ['otbor.csv', 'departments.csv', 'terminals.csv']
         for name in fnames:
             info += self.to_gdrive(name)
+        """
         self.info = info
+
+u = RefreshAll()
+u.main_refresh()
